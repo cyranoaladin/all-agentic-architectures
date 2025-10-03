@@ -58,11 +58,14 @@ PATTERNS: list[PatternMeta] = [
         categorie="Raisonnement",
         fonctionnement_court="N exécutions variées → vote majoritaire.",
         utilite_concrets=["Fiabilité ↑", "Réduction des hallucinations ponctuelles"],
-        detail_technique="Réexécuter plusieurs chaînes, agréger par consensus.",
-        implication_backend="Boucle d’échantillonnage + agrégation.",
-        compromis_cout_latence="Coût N×; latence N×.",
-        has_demo=False,
-        tags=["votes", "validation"],
+        detail_technique=(
+            "Relancer la génération avec température>0 (N tirages), puis agréger par vote; "
+            "conserver la réponse majoritaire (ou top-N avec scores)."
+        ),
+        implication_backend="Boucle d’échantillonnage (N appels) + agrégateur (LLM ou heuristique).",
+        compromis_cout_latence="Coût≈N×; latence≈N× (à borner via [1..5]).",
+        has_demo=True,
+        tags=["votes", "validation", "robustesse"],
     ),
     PatternMeta(
         id_pattern="tool_use",
@@ -142,11 +145,14 @@ PATTERNS: list[PatternMeta] = [
         categorie="Amélioration",
         fonctionnement_court="Progression graduée des tâches par difficulté.",
         utilite_concrets=["Généralisation ↑", "Pédagogie agents"],
-        detail_technique="Meta-control classe/route par difficulté.",
-        implication_backend="Notions de niveaux, file d’attente, datasets gradués.",
-        compromis_cout_latence="Coût d’ingénierie; latence variable.",
-        has_demo=False,
-        tags=["training", "pedagogy"],
+        detail_technique=(
+            "Génère des exercices par niveaux (1..3) avec objectifs clairs; "
+            "favorise l’apprentissage progressif."
+        ),
+        implication_backend="Gestion de niveaux, contrôle de difficulté, sortie structurée JSON.",
+        compromis_cout_latence="Latence faible à modérée selon nombre de niveaux.",
+        has_demo=True,
+        tags=["training", "pedagogy", "progression"],
     ),
     PatternMeta(
         id_pattern="pev",

@@ -23,13 +23,13 @@ jobs:
       - name: Node (build frontend)
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "20.19.0"
       - run: |
           cd frontend
           npm ci
           npm run build
           cd ..
-      - name: Smoke (local)
+      - name: Smoke + ingest + self-test
         run: |
           . .venv/bin/activate
           PYTHONPATH="${GITHUB_WORKSPACE}" python -m backend.ingestion.build_faiss --rebuild
@@ -37,3 +37,4 @@ jobs:
           sleep 3
           curl -f http://127.0.0.1:8010/healthz
           curl -f -H 'Content-Type: application/json' -d '{"prompt":"Ping"}' http://127.0.0.1:8010/api/a01/run
+          bash scripts/self_test.sh

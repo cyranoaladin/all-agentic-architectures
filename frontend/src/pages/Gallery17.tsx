@@ -20,6 +20,8 @@ const CARDS: Card[] = [
   { code: "a15", title: "A15 — RLHF-like Loop", desc: "Answer→Critique→Refine + score" },
   { code: "a16", title: "A16 — Simulator (MITL)", desc: "Monde mental + feedback" },
   { code: "a17", title: "A17 — Reflexive Metacognitive", desc: "Incertitudes & unknowns" },
+  { code: "a18", title: "A18 — Self-Consistency", desc: "N générations → vote majoritaire" },
+  { code: "a19", title: "A19 — Curriculum Learning", desc: "Exercices gradués 1→3" },
 ];
 
 export default function Gallery17({ onSelect }: { onSelect: (code: string) => void; }) {
