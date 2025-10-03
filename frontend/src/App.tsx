@@ -9,13 +9,14 @@ import { API } from "./api";
 import "./App.css";
 import ProviderToggle from "./components/ProviderToggle";
 import Gallery17 from "./pages/Gallery17";
+import Overview from "./pages/Overview";
 import PatternDetails from "./pages/PatternDetails";
 import PatternsCatalog from "./pages/PatternsCatalog";
 
-type Tab = "gallery" | "catalog" | "a01" | "rag" | "a02" | "a04" | "a05" | "a06" | "a07" | "a08" | "a09";
+type Tab = "overview" | "gallery" | "catalog" | "a01" | "rag" | "a02" | "a04" | "a05" | "a06" | "a07" | "a08" | "a09";
 
 function App() {
-  const [tab, setTab] = useState<Tab>("gallery");
+  const [tab, setTab] = useState<Tab>("overview");
   const [selectedPattern, setSelectedPattern] = useState<string | null>(null);
   const [health, setHealth] = useState<string>("(en attente…)");
   useEffect(() => {
@@ -30,21 +31,23 @@ function App() {
         <h1>All Agentic — Démo locale</h1>
         <p className="health">Health: {health}</p>
         <nav>
-          <button className={tab === "gallery" ? "active" : ""} onClick={() => setTab("gallery")}>🏠 Gallery 17</button>
+          <button className={tab === "overview" ? "active" : ""} onClick={() => setTab("overview")}>🏠 Aperçu</button>
+          <button className={tab === "gallery" ? "active" : ""} onClick={() => setTab("gallery")}>🧩 Galerie 17</button>
           <button className={tab === "catalog" ? "active" : ""} onClick={() => { setSelectedPattern(null); setTab("catalog"); }}>📚 Catalogue</button>
-          <button className={tab === "a01" ? "active" : ""} onClick={() => setTab("a01")}>A01 — Reflection</button>
+          <button className={tab === "a01" ? "active" : ""} onClick={() => setTab("a01")}>A01 — Réflexion</button>
           <button className={tab === "rag" ? "active" : ""} onClick={() => setTab("rag")}>RAG — QA</button>
-          <button className={tab === "a02" ? "active" : ""} onClick={() => setTab("a02")}>A02 — Tool Use</button>
-          <button className={tab === "a04" ? "active" : ""} onClick={() => setTab("a04")}>A04 — Planning</button>
+          <button className={tab === "a02" ? "active" : ""} onClick={() => setTab("a02")}>A02 — Outils</button>
+          <button className={tab === "a04" ? "active" : ""} onClick={() => setTab("a04")}>A04 — Planification</button>
           <button className={tab === "a05" ? "active" : ""} onClick={() => setTab("a05")}>A05 — PEV</button>
-          <button className={tab === "a06" ? "active" : ""} onClick={() => setTab("a06")}>A06 — Blackboard</button>
-          <button className={tab === "a07" ? "active" : ""} onClick={() => setTab("a07")}>A07 — Episodic+Semantic</button>
-          <button className={tab === "a08" ? "active" : ""} onClick={() => setTab("a08")}>A08 — Graph Memory</button>
+          <button className={tab === "a06" ? "active" : ""} onClick={() => setTab("a06")}>A06 — Tableau noir</button>
+          <button className={tab === "a07" ? "active" : ""} onClick={() => setTab("a07")}>A07 — Épisodique+Sémantique</button>
+          <button className={tab === "a08" ? "active" : ""} onClick={() => setTab("a08")}>A08 — Mémoire graphe</button>
           <button className={tab === "a09" ? "active" : ""} onClick={() => setTab("a09")}>A09 — ToT</button>
         </nav>
       </header>
       <main>
         <ProviderToggle />
+        {tab === "overview" && <Overview />}
         {tab === "gallery" && <Gallery17 onSelect={(code) => setTab(code as Tab)} />}
         {tab === "catalog" && (
           selectedPattern ? (
@@ -87,7 +90,7 @@ function A01() {
   };
   return (
     <section>
-      <h2>Reflection (A01)</h2>
+      <h2>Réflexion (A01)</h2>
       <textarea value={prompt} onChange={e => setPrompt(e.target.value)} rows={4} />
       <button onClick={run} disabled={loading}>{loading ? "…" : "Lancer"}</button>
       <div className="result">
@@ -120,7 +123,7 @@ function RAG() {
   };
   return (
     <section>
-      <h2>RAG — QA</h2>
+      <h2>RAG — Questions-Réponses</h2>
       <input value={question} onChange={e => setQuestion(e.target.value)} />
       <label>k:
         <input type="number" value={k} min={1} max={10} onChange={e => setK(parseInt(e.target.value || "5", 10))} />
@@ -155,7 +158,7 @@ function A02() {
   };
   return (
     <section>
-      <h2>Tool Use (A02)</h2>
+      <h2>Outils (A02)</h2>
       <input value={question} onChange={e => setQuestion(e.target.value)} />
       <button onClick={run} disabled={loading}>{loading ? "…" : "Rechercher"}</button>
       <div className="result">
