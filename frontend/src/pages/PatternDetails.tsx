@@ -6,7 +6,7 @@ import type { PatternMeta } from "../types/patterns";
 export default function PatternDetails({ id, onBack }: { id: string; onBack: () => void; }) {
   const [m, setM] = useState<PatternMeta | null>(null);
   const [loading, setLoading] = useState(true);
-  const [demoOut, setDemoOut] = useState<any>(null);
+  const [demoOut, setDemoOut] = useState<unknown>(null);
   const [err, setErr] = useState<string>("");
 
   useEffect(() => {
@@ -25,8 +25,9 @@ export default function PatternDetails({ id, onBack }: { id: string; onBack: () 
           : {};
       const out = await runDemo(m.id_pattern, input);
       setDemoOut(out);
-    } catch (e: any) {
-      setErr(e.message || String(e));
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setErr(msg);
     }
   };
 
@@ -72,7 +73,7 @@ export default function PatternDetails({ id, onBack }: { id: string; onBack: () 
           {m.has_demo ? "▶︎ Run demo" : "—"}
         </button>
         {err && <p style={{ color: "crimson" }}>{err}</p>}
-        {demoOut && (
+        {demoOut !== null && (
           <pre style={{ marginTop: 12, whiteSpace: "pre-wrap" }}>{JSON.stringify(demoOut, null, 2)}</pre>
         )}
       </section>

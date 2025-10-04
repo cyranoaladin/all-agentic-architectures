@@ -1,14 +1,14 @@
 import { useState } from "react";
 export default function A05PEV() {
   const [task, setTask] = useState("Écrire un plan, exécuter mentalement, puis vérifier.");
-  const [out, setOut] = useState<any>({});
+  const [out, setOut] = useState<{ answer?: string; }>({});
   const [loading, setLoading] = useState(false);
   const run = async () => {
     setLoading(true);
     try {
-      const r = await fetch("/api/a05/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ task }) }).then(r => r.json());
+      const r: { answer?: string; } = await fetch("/api/a05/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ task }) }).then(r => r.json());
       setOut(r);
-    } catch (e: any) { setOut({ answer: `Erreur: ${e.message}` }); }
+    } catch (e: unknown) { const msg = e instanceof Error ? e.message : String(e); setOut({ answer: `Erreur: ${msg}` }); }
     finally { setLoading(false); }
   };
   return (<section><h2>A05 — PEV</h2>

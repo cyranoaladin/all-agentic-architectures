@@ -13,7 +13,10 @@ export async function fetchPattern(id: string): Promise<PatternMeta> {
   return await r.json();
 }
 
-export async function runDemo(id: string, input: any): Promise<any> {
+export type ExecuteInput = Record<string, unknown>;
+export type ExecuteOut = { ok?: boolean; id_pattern?: string; output?: unknown; metrics?: Record<string, unknown>; } | unknown;
+
+export async function runDemo(id: string, input: ExecuteInput): Promise<ExecuteOut> {
   const r = await fetch(`/api/execute/${id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

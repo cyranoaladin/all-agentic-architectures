@@ -30,7 +30,7 @@ export default function PatternsCatalog({ onOpen }: { onOpen: (id: string) => vo
   return (
     <div>
       <div style={{ display: "flex", gap: 12, alignItems: "center", margin: "8px 0" }}>
-        <select value={cat} onChange={e => setCat(e.target.value as any)}>
+        <select value={cat} onChange={e => setCat(e.target.value as typeof CATS[number])}>
           {CATS.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
         <input value={q} onChange={e => setQ(e.target.value)} placeholder="Recherche titre/tags…" style={{ flex: 1 }} />

@@ -4,14 +4,14 @@ export default function A09ToT() {
   const [task, setTask] = useState("Résumer un article de presse en identifiant 3 angles différents.");
   const [breadth, setBreadth] = useState(3);
   const [depth, setDepth] = useState(2);
-  const [out, setOut] = useState<any>({});
+  const [out, setOut] = useState<{ answer?: string; best?: unknown; trace?: unknown; }>({});
   const [loading, setLoading] = useState(false);
   const run = async () => {
     setLoading(true);
     try {
-      const r = await fetch("/api/a09/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ task, breadth, depth }) }).then(r => r.json());
+      const r: { answer?: string; best?: unknown; trace?: unknown; } = await fetch("/api/a09/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ task, breadth, depth }) }).then(r => r.json());
       setOut(r);
-    } catch (e: any) { setOut({ answer: `Erreur: ${e.message}` }); }
+    } catch (e: unknown) { const msg = e instanceof Error ? e.message : String(e); setOut({ answer: `Erreur: ${msg}` }); }
     finally { setLoading(false); }
   };
   return (<section>
@@ -24,7 +24,7 @@ export default function A09ToT() {
     </div>
     <button onClick={run} disabled={loading}>{loading ? "…" : "Explorer"}</button>
     <div className="result"><h3>Réponse</h3><pre>{out.answer || "—"}</pre></div>
-    {out.best && <div className="result"><h4>Meilleure piste</h4><pre>{JSON.stringify(out.best, null, 2)}</pre></div>}
-    {out.trace && <div className="result"><h4>Trace</h4><pre>{JSON.stringify(out.trace, null, 2)}</pre></div>}
+    {Boolean(out.best) && <div className="result"><h4>Meilleure piste</h4><pre>{JSON.stringify(out.best, null, 2)}</pre></div>}
+    {Boolean(out.trace) && <div className="result"><h4>Trace</h4><pre>{JSON.stringify(out.trace, null, 2)}</pre></div>}
   </section>);
 }

@@ -8,6 +8,11 @@ import A09ToT from "./agents/A09ToT";
 import { API } from "./api";
 import "./App.css";
 import ProviderToggle from "./components/ProviderToggle";
+import Header from "./components/Header";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import CataloguePage from "./pages/CataloguePage";
+import DemoPage from "./pages/DemoPage";
 import Gallery17 from "./pages/Gallery17";
 import PatternDetails from "./pages/PatternDetails";
 import PatternsCatalog from "./pages/PatternsCatalog";
@@ -25,48 +30,44 @@ function App() {
   }, []);
 
   return (
-    <div className="container">
-      <header>
-        <h1>All Agentic — Démo locale</h1>
-        <p className="health">Health: {health}</p>
-        <nav>
-          <button className={tab === "gallery" ? "active" : ""} onClick={() => setTab("gallery")}>🏠 Gallery 17</button>
-          <button className={tab === "catalog" ? "active" : ""} onClick={() => { setSelectedPattern(null); setTab("catalog"); }}>📚 Catalogue</button>
-          <button className={tab === "a01" ? "active" : ""} onClick={() => setTab("a01")}>A01 — Reflection</button>
-          <button className={tab === "rag" ? "active" : ""} onClick={() => setTab("rag")}>RAG — QA</button>
-          <button className={tab === "a02" ? "active" : ""} onClick={() => setTab("a02")}>A02 — Tool Use</button>
-          <button className={tab === "a04" ? "active" : ""} onClick={() => setTab("a04")}>A04 — Planning</button>
-          <button className={tab === "a05" ? "active" : ""} onClick={() => setTab("a05")}>A05 — PEV</button>
-          <button className={tab === "a06" ? "active" : ""} onClick={() => setTab("a06")}>A06 — Blackboard</button>
-          <button className={tab === "a07" ? "active" : ""} onClick={() => setTab("a07")}>A07 — Episodic+Semantic</button>
-          <button className={tab === "a08" ? "active" : ""} onClick={() => setTab("a08")}>A08 — Graph Memory</button>
-          <button className={tab === "a09" ? "active" : ""} onClick={() => setTab("a09")}>A09 — ToT</button>
-        </nav>
-      </header>
-      <main>
-        <ProviderToggle />
-        {tab === "gallery" && <Gallery17 onSelect={(code) => setTab(code as Tab)} />}
-        {tab === "catalog" && (
-          selectedPattern ? (
-            <PatternDetails id={selectedPattern} onBack={() => setSelectedPattern(null)} />
-          ) : (
-            <PatternsCatalog onOpen={(id) => setSelectedPattern(id)} />
-          )
-        )}
-        {tab === "a01" && <A01 />}
-        {tab === "rag" && <RAG />}
-        {tab === "a02" && <A02 />}
-        {tab === "a04" && <A04Planning />}
-        {tab === "a05" && <A05PEV />}
-        {tab === "a06" && <A06Blackboard />}
-        {tab === "a07" && <A07EpisodicSemantic />}
-        {tab === "a08" && <A08GraphMemory />}
-        {tab === "a09" && <A09ToT />}
-      </main>
-      <footer>
-        <small>Même origine que l’API (StaticFiles) — conditions proches prod.</small>
-      </footer>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <div style={{ paddingTop: 72 }}>
+        <div className="container">
+          <p className="health">Health: {health}</p>
+          <ProviderToggle />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/catalogue" element={<CataloguePage />} />
+            <Route path="/demo" element={<DemoPage />} />
+            <Route path="/legacy" element={
+              <main>
+                {tab === "gallery" && <Gallery17 onSelect={(code) => setTab(code as Tab)} />}
+                {tab === "catalog" && (
+                  selectedPattern ? (
+                    <PatternDetails id={selectedPattern} onBack={() => setSelectedPattern(null)} />
+                  ) : (
+                    <PatternsCatalog onOpen={(id) => setSelectedPattern(id)} />
+                  )
+                )}
+                {tab === "a01" && <A01 />}
+                {tab === "rag" && <RAG />}
+                {tab === "a02" && <A02 />}
+                {tab === "a04" && <A04Planning />}
+                {tab === "a05" && <A05PEV />}
+                {tab === "a06" && <A06Blackboard />}
+                {tab === "a07" && <A07EpisodicSemantic />}
+                {tab === "a08" && <A08GraphMemory />}
+                {tab === "a09" && <A09ToT />}
+              </main>
+            } />
+          </Routes>
+          <footer>
+            <small>Même origine que l’API (StaticFiles) — conditions proches prod.</small>
+          </footer>
+        </div>
+      </div>
+    </BrowserRouter>
   );
 }
 
@@ -79,8 +80,9 @@ function A01() {
     try {
       const res = await API.a01({ prompt });
       setOut(res);
-    } catch (e: any) {
-      setOut({ answer: `Erreur: ${e.message}` });
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setOut({ answer: `Erreur: ${msg}` });
     } finally {
       setLoading(false);
     }
@@ -112,8 +114,9 @@ function RAG() {
     try {
       const res = await API.rag({ question, k });
       setOut(res);
-    } catch (e: any) {
-      setOut({ answer: `Erreur: ${e.message}` });
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setOut({ answer: `Erreur: ${msg}` });
     } finally {
       setLoading(false);
     }
@@ -147,8 +150,9 @@ function A02() {
     try {
       const res = await API.a02({ question });
       setOut(res);
-    } catch (e: any) {
-      setOut({ answer: `Erreur: ${e.message}` });
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setOut({ answer: `Erreur: ${msg}` });
     } finally {
       setLoading(false);
     }

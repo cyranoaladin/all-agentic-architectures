@@ -26,8 +26,9 @@ export default function ProviderToggle() {
           model: h.env?.DEFAULT_EMBEDDING_MODEL || "",
         },
       });
-    } catch (e: any) {
-      setMsg(`Erreur healthz: ${e.message}`);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setMsg(`Erreur healthz: ${msg}`);
     }
   };
 
@@ -45,8 +46,9 @@ export default function ProviderToggle() {
         body: JSON.stringify(cfg),
       }).then((r) => r.json());
       setMsg("✅ Appliqué. (In-memory) — Les prochains appels utiliseront ces valeurs.");
-    } catch (e: any) {
-      setMsg(`❌ Erreur: ${e.message}`);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setMsg(`❌ Erreur: ${msg}`);
     } finally {
       setLoading(false);
       load();
