@@ -1,3 +1,34 @@
+Frontend — All Agentic (UI/UX refresh)
+
+- Stack: React 19 + Vite + TypeScript + TailwindCSS + lucide-react
+- Thème: sombre premium (voir tailwind.config.js)
+- Pages: Accueil (/), Catalogue (/catalogue), Démonstration (/demo)
+
+Scripts
+
+- npm run dev: démarrage en dev
+- npm run build: build de production
+- npm run lint: ESLint (TS strict)
+
+Styles
+
+- Police Poppins via Google Fonts (voir index.html)
+- Couleurs: bg-main, bg-card, text-main, text-muted, accent-1, accent-2
+
+API
+
+- Catalogue: GET /api/patterns
+- Détail: GET /api/patterns/{id}
+- Demo: POST /api/execute/{id}
+- Provider: GET/POST /api/config/provider
+
+Composants
+
+- Header: nav fixe avec icônes
+- AgentCard: carte agent réutilisable
+- AgentModal: détails agent (description, cas d’usage)
+- ProviderToggle: sélection provider/model (in-memory)
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

@@ -16,14 +16,13 @@ export default function Header() {
           <div className="font-semibold tracking-wide">All Agentic</div>
           <div className="text-sm opacity-70">— Agentic IA demos</div>
         </div>
-        <nav className="flex items-center gap-2">
-          <Link to="/" className={cls(is("/"))}><Home size={18} /> Accueil</Link>
-          <Link to="/catalogue" className={cls(is("/catalogue"))}><LayoutGrid size={18} /> Catalogue</Link>
-          <Link to="/demo" className={cls(is("/demo"))}><Sparkles size={18} /> Démonstration</Link>
+        <nav className="flex items-center gap-2" aria-label="Navigation principale">
+          <Link to="/" className={cls(is("/"))} aria-label="Accueil"><Home size={18} /> Accueil</Link>
+          <Link to="/catalogue" className={cls(is("/catalogue"))} aria-label="Catalogue"><LayoutGrid size={18} /> Catalogue</Link>
+          <Link to="/demo" className={cls(is("/demo"))} aria-label="Démonstration"><Sparkles size={18} /> Démonstration</Link>
+          <span className="ml-2 text-xs px-2 py-1 rounded-full border border-accent-1/40">UI Refresh</span>
         </nav>
       </div>
     </header>
   );
 }
-
-

@@ -46,6 +46,7 @@ from backend.core.schemas import (  # noqa: E402
     PatternExecOut,
 )
 import time  # noqa: E402
+import subprocess  # noqa: E402
 
 app = FastAPI(title="All Agentic Architectures API (Local)")
 
@@ -257,6 +258,13 @@ if _DIST.exists():
             return FileResponse(svg)
         raise HTTPException(status_code=404, detail="favicon non trouvé")
 
+    @app.get("/{path:path}", include_in_schema=False)
+    async def _spa_catch_all(path: str):
+        # Servez index.html pour toute route non-API afin de supporter le routing côté client (SPA)
+        if path.startswith("api/") or path.startswith("assets/"):
+            raise HTTPException(status_code=404, detail="resource non trouvée")
+        return FileResponse(_DIST / "index.html")
+
 
 @app.post("/api/a09/run")
 def a09_run(body: dict):
@@ -416,3 +424,42 @@ def a08_run(body: dict):
     }
     out = run_graph(a08_graph_memory.build_app, s)
     return {"answer": out.get("answer", ""), "graph": out.get("graph", {})}
+
+
+# ---------- Ingestion sécurisée ----------
+@app.post("/api/ingest")
+def secure_ingest(token: str = Body(..., embed=True)):
+    expected = os.getenv("INGEST_TOKEN", "")
+    if not expected or token != expected:
+        raise HTTPException(status_code=401, detail="unauthorized")
+    lock = Path(__file__).resolve().parents[1] / ".ingest.lock"
+    if lock.exists():
+        raise HTTPException(status_code=429, detail="ingestion already running")
+    try:
+        lock.touch()
+        t0 = time.time()
+        cp = subprocess.run(
+            [
+                os.getenv("PYTHON", "python"),
+                "-m",
+                "backend.ingestion.build_faiss",
+                "--rebuild",
+            ],
+            capture_output=True,
+            text=True,
+            env={**os.environ, "PYTHONPATH": str(Path(__file__).resolve().parents[1])},
+        )
+        dt = round(time.time() - t0, 3)
+        if cp.returncode != 0:
+            raise HTTPException(status_code=500, detail=cp.stderr or cp.stdout)
+        return {"ok": True, "latency_s": dt, "stdout": cp.stdout[-2000:]}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        try:
+            if lock.exists():
+                lock.unlink()
+        except Exception:
+            pass

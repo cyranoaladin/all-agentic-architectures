@@ -10,7 +10,7 @@ export type AgentModalData = {
   slogan?: string;
   description?: string;
   useCase?: string[];
-  icon: ComponentType<{ size?: number }>;
+  icon?: ComponentType<{ size?: number; }>;
 };
 
 export default function AgentModal({ agent, onClose }: { agent: AgentModalData | null; onClose: () => void; }) {
@@ -21,7 +21,9 @@ export default function AgentModal({ agent, onClose }: { agent: AgentModalData |
       <div className="bg-bg-card rounded-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative border border-white/10">
         <button onClick={onClose} className="absolute top-3 right-3 opacity-80 hover:opacity-100">✕</button>
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 rounded-full bg-accent-1/15 border border-accent-1/30"><Icon size={28} /></div>
+          {Icon ? (
+            <div className="p-3 rounded-full bg-accent-1/15 border border-accent-1/30"><Icon size={28} /></div>
+          ) : null}
           <div>
             <h2 className="text-xl font-semibold">{agent.frName}</h2>
             {agent.slogan && <p className="opacity-80">{agent.slogan}</p>}
@@ -40,5 +42,3 @@ export default function AgentModal({ agent, onClose }: { agent: AgentModalData |
     </div>
   );
 }
-
-

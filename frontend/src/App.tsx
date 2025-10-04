@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import A04Planning from "./agents/A04Planning";
 import A05PEV from "./agents/A05PEV";
 import A06Blackboard from "./agents/A06Blackboard";
@@ -7,13 +8,12 @@ import A08GraphMemory from "./agents/A08GraphMemory";
 import A09ToT from "./agents/A09ToT";
 import { API } from "./api";
 import "./App.css";
-import ProviderToggle from "./components/ProviderToggle";
 import Header from "./components/Header";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import ProviderToggle from "./components/ProviderToggle";
 import CataloguePage from "./pages/CataloguePage";
 import DemoPage from "./pages/DemoPage";
 import Gallery17 from "./pages/Gallery17";
+import HomePage from "./pages/HomePage";
 import PatternDetails from "./pages/PatternDetails";
 import PatternsCatalog from "./pages/PatternsCatalog";
 
